@@ -15,43 +15,36 @@ public class Main {
         // 创建 SimpleIOC 容器实例
         SimpleIOC ioc = new SimpleIOC();
 
-        // 注册 Dependency 类的 Bean 定义
-        // 注册 Bean 定义，而不是创建 Bean 实例
-        // 改动原因：支持循环依赖
-        ioc.registerBean("dependency", Dependency.class);
+        // 注册 Dependency 类的 Bean 定义（构造器注入）
+        ioc.registerBean("dependency", Dependency.class, InjectionType.CONSTRUCTOR);
 
-        // 注册 Service 类的 Bean 定义
-        // 注册 Bean 定义，而不是创建 Bean 实例
-        // 改动原因：支持循环依赖
-        ioc.registerBean("service", Service.class);
+        // 注册 Service 类的 Bean 定义（构造器注入）
+        ioc.registerBean("service", Service.class, InjectionType.CONSTRUCTOR);
 
-        // 获取 Service 类的 Bean 实例
-        // 从容器中获取 Bean 实例，如果 Bean 未创建，则自动创建
-        Service service = (Service) ioc.getBean("service");
+        // 获取 Service 类的 Bean 实例 (构造器注入)
+        Service service1 = (Service) ioc.getBean("service");
+        service1.hello();
 
-        // 调用 Service 类的 hello 方法
-        service.hello();
+        // 创建新的 Service 实例 (Setter 注入)
+        Service service2 = (Service) ioc.createBean("service", Service.class, InjectionType.SETTER);
+        Dependency dependency = (Dependency) ioc.getBean("dependency");
+        service2.setDependency(dependency);
+        service2.hello();
 
-        // 注册 B 类的 Bean 定义
-        // 注册 Bean 定义，而不是创建 Bean 实例
-        // 改动原因：支持循环依赖
-        ioc.registerBean("b", B.class);
+       /* // 注册 B 类的 Bean 定义（构造器注入）
+        ioc.registerBean("b", B.class, InjectionType.CONSTRUCTOR);
 
-        // 注册 A 类的 Bean 定义
-        // 注册 Bean 定义，而不是创建 Bean 实例
-        // 改动原因：支持循环依赖
-        ioc.registerBean("a", A.class);
+        // 注册 A 类的 Bean 定义（构造器注入）
+        ioc.registerBean("a", A.class, InjectionType.CONSTRUCTOR);
 
         // 获取 A 类的 Bean 实例
-        // 从容器中获取 Bean 实例，如果 Bean 未创建，则自动创建
         A a = (A) ioc.getBean("a");
 
         // 获取 B 类的 Bean 实例
-        // 从容器中获取 Bean 实例，如果 Bean 未创建，则自动创建
         B b = (B) ioc.getBean("b");
 
         // 验证循环依赖是否正确注入
         System.out.println("a.b:" + a.getB());
-        System.out.println("b.a:" + b.getA());
+        System.out.println("b.a:" + b.getA());*/
     }
 }

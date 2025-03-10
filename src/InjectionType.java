@@ -1,0 +1,3 @@
+enum InjectionType {
+    CONSTRUCTOR, SETTER
+}
