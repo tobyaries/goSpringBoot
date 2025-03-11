@@ -1,4 +1,6 @@
-class Utils {
+package main.java.utils;
+
+public class Utils {
     /**
      * 将字符串的第一个字母转换为小写。
      *

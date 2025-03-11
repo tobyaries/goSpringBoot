@@ -1,3 +1,5 @@
+package main.java.beans;
+
 public class A {
     private B b;
 

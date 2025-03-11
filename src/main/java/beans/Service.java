@@ -1,4 +1,6 @@
-class Service {
+package main.java.beans;
+
+public class Service {
     private Dependency dependency;
 
     // 添加无参构造函数

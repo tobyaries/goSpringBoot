@@ -1,3 +1,9 @@
+package main.java.core;
+
+import main.java.enums.InjectionType;
+import main.java.enums.ScopeType;
+import main.java.utils.Utils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -30,8 +36,8 @@ public class SimpleIOC {
      * @param clazz         Bean 的 Class 对象
      * @param injectionType Bean 的注入类型
      */
-    public void registerBean(String name, Class<?> clazz, InjectionType injectionType) {
-        beanDefinitionMap.put(name, new BeanDefinition(clazz, injectionType));
+    public void registerBean(String name, Class<?> clazz, InjectionType injectionType, ScopeType scope) {
+        beanDefinitionMap.put(name, new BeanDefinition(clazz, injectionType, scope));
     }
 
     /**
@@ -42,26 +48,35 @@ public class SimpleIOC {
      * @throws IllegalArgumentException 如果没有找到指定名称的 Bean
      */
     public Object getBean(String name) {
-        // 先检查 Bean 是否已经创建
-        Object bean = beanMap.get(name);
-        if (bean == null) {
-            // 如果 Bean 未创建，则获取 Bean 的定义
-            BeanDefinition beanDefinition = beanDefinitionMap.get(name);
-            if (beanDefinition != null) {
-                // 如果找到 Bean 的定义，则创建 Bean 的实例
+        BeanDefinition beanDefinition = beanDefinitionMap.get(name);
+        if (beanDefinition == null) {
+            throw new IllegalArgumentException("No bean named " + name + " is registered");
+        }
+
+        ScopeType scope = beanDefinition.getScope();
+        if (ScopeType.SINGLETON.equals(scope)) {
+            // 单例 Bean
+            Object bean = beanMap.get(name);
+            if (bean == null) {
                 try {
                     bean = createBean(name, beanDefinition.getClazz(), beanDefinition.getInjectionType());
                     beanMap.put(name, bean);
                 } catch (Exception e) {
-                    // 如果创建 Bean 的实例失败，则抛出异常
                     throw new RuntimeException(e);
                 }
-            } else {
-                // 如果没有找到 Bean 的定义，则抛出异常
-                throw new IllegalArgumentException("No bean named " + name + " is registered");
             }
+            return bean;
+        } else if (ScopeType.PROTOTYPE.equals(scope)) {
+            // 原型 Bean
+            try {
+                return createBean(name, beanDefinition.getClazz(), beanDefinition.getInjectionType());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // 未知作用域
+            throw new IllegalArgumentException("Unknown scope: " + scope);
         }
-        return bean;
     }
 
     /**
@@ -147,10 +162,15 @@ public class SimpleIOC {
     private static class BeanDefinition {
         private Class<?> clazz;
         private InjectionType injectionType;
+        private ScopeType scope;
 
-        public BeanDefinition(Class<?> clazz, InjectionType injectionType) {
+        public BeanDefinition(Class<?> clazz, InjectionType injectionType, ScopeType scope) {
+            // 保存对象的clazz
             this.clazz = clazz;
+            // 注入类型 是构造器注入还是setter注入
             this.injectionType = injectionType;
+            // 作用域字段 是单例还是原型
+            this.scope = scope;
         }
 
         public Class<?> getClazz() {
@@ -159,6 +179,9 @@ public class SimpleIOC {
 
         public InjectionType getInjectionType() {
             return injectionType;
+        }
+        public ScopeType getScope() {
+            return scope;
         }
     }
 }
