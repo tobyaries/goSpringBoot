@@ -3,18 +3,22 @@ package main.java.beans;
 public class Service {
     private Dependency dependency;
 
-    // 添加无参构造函数
+    // Add no-argument constructor
     public Service() {
     }
+
     public Service(Dependency dependency) {
+
         this.dependency = dependency;
     }
 
     public void setDependency(Dependency dependency) {
+
         this.dependency = dependency;
     }
 
-    public void hello() {
+    public void hello()
+    {
         dependency.hello();
     }
 }

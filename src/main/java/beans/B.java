@@ -4,7 +4,7 @@ public class B {
     private A a;
 
     public B() {
-        // 添加无参构造函数
+        // Add no-argument constructor
     }
 
     public void setA(A a) {
