@@ -8,8 +8,6 @@ package main.java;/*
 7. 生命周期管理： 我们需要添加 Bean 的生命周期管理，例如，在 Bean 创建后调用初始化方法，在 Bean 销毁前调用销毁方法。
 8. AOP 支持： 为了支持面向切面编程（AOP），我们需要添加 AOP 支持。
 */
-
-
 import main.java.beans.A;
 import main.java.beans.B;
 import main.java.beans.Dependency;
@@ -44,11 +42,10 @@ public class Main {
 
         Service prototypeService2 = (Service) ioc.getBean("prototypeService");
         System.out.println("prototypeService1 == prototypeService2: " + (prototypeService1 == prototypeService2));
-/*
 
         // 注册循环依赖的 Bean
-        ioc.registerBean("a", A.class, InjectionType.CONSTRUCTOR, ScopeType.SINGLETON);
-        ioc.registerBean("b", B.class, InjectionType.CONSTRUCTOR, ScopeType.SINGLETON);
+        ioc.registerBean("a", A.class, InjectionType.SETTER, ScopeType.SINGLETON);
+        ioc.registerBean("b", B.class, InjectionType.SETTER, ScopeType.SINGLETON);
 
         // 获取循环依赖的 Bean 的实例
         A a = (A) ioc.getBean("a");
@@ -57,7 +54,6 @@ public class Main {
         // 验证循环依赖是否正确注入
         System.out.println("a.b:" + a.getB());
         System.out.println("b.a:" + b.getA());
-*/
 
         // 获取不存在的 Bean
         try {

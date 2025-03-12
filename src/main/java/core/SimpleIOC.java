@@ -3,7 +3,6 @@ package main.java.core;
 import main.java.enums.InjectionType;
 import main.java.enums.ScopeType;
 import main.java.utils.Utils;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -11,13 +10,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class SimpleIOC {
 
     /**
-     * 用于存储 Bean 的实例，key 是 Bean 的名称，value 是 Bean 的实例
+     * 一级缓存，用于存储完全创建的单例 Bean
      */
-    private Map<String, Object> beanMap = new HashMap<>();
+    private Map<String, Object> singletonObjects = new HashMap<>();
+
+    /**
+     * 二级缓存，用于存储早期暴露的 Bean 引用
+     */
+    private Map<String, Object> earlySingletonObjects = new HashMap<>();
+
+    /**
+     * 三级缓存，用于存储 Bean 的 ObjectFactory
+     */
+    private Map<String, Supplier<?>> singletonFactories = new HashMap<>();
 
     /**
      * 用于存储 Bean 的定义，key 是 Bean 的名称，value 是 BeanDefinition 对象
@@ -52,17 +62,35 @@ public class SimpleIOC {
         if (beanDefinition == null) {
             throw new IllegalArgumentException("No bean named " + name + " is registered");
         }
-
         ScopeType scope = beanDefinition.getScope();
         if (ScopeType.SINGLETON.equals(scope)) {
             // 单例 Bean
-            Object bean = beanMap.get(name);
+            // Object bean = beanMap.get(name);
+            // 首先从一级缓存尝试拿到依赖对象的成品
+            Object bean = singletonObjects.get(name);
             if (bean == null) {
-                try {
-                    bean = createBean(name, beanDefinition.getClazz(), beanDefinition.getInjectionType());
-                    beanMap.put(name, bean);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                // 尝试从二级缓存拿到依赖对象的半成品
+                bean = earlySingletonObjects.get(name);
+                if (bean == null) {
+                    // 尝试从三级缓存拿到依赖对象的工厂方法
+                    Supplier<?> objectFactory = singletonFactories.get(name);
+                    if (objectFactory != null) {
+                        // 通过工厂方法创建半成品bean
+                        bean = objectFactory.get();
+                        // 放入二级缓存
+                        earlySingletonObjects.put(name, bean);
+                        singletonFactories.remove(name);
+                    }
+                }
+                // 如果是没有注册过的bean
+                if (bean == null) {
+                    try {
+                        bean = createBean(name, beanDefinition.getClazz(), beanDefinition.getInjectionType());
+                        singletonObjects.put(name, bean);
+                        earlySingletonObjects.remove(name);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             return bean;
@@ -91,7 +119,15 @@ public class SimpleIOC {
     public Object createBean(String name, Class<?> clazz, InjectionType injectionType) throws Exception {
         // 检测循环依赖：如果当前 Bean 正在创建，则抛出异常
         if (creatingBeans.contains(name)) {
-            throw new RuntimeException("Circular dependency detected: " + name);
+            // 如果是构造器注入，则抛出异常
+            if(injectionType == InjectionType.CONSTRUCTOR) {
+                throw new RuntimeException("Circular dependency detected: " + name);
+            }
+            // 如果是setter注入，则尝试从二级缓存中获取早期引用
+            Object earlyBean = earlySingletonObjects.get(name);
+            if (earlyBean != null) {
+                return earlyBean;
+            }
         }
         // 将当前 Bean 的名称添加到正在创建的集合中
         creatingBeans.add(name);
@@ -129,6 +165,11 @@ public class SimpleIOC {
             }
 
             /* ---  此时 bean 已经被创建 ---*/
+            // 将 Bean 的 ObjectFactory 放入三级缓存
+            singletonFactories.put(name, () -> bean);
+
+            // 将 Bean 的早期引用放入二级缓存
+            earlySingletonObjects.put(name, bean);
 
             // Setter 注入
             // 即使使用构造器注入，也会执行setter注入。因为构造器注入之后可能会有可选参数需要setter注入。
@@ -142,6 +183,18 @@ public class SimpleIOC {
                         Class<?> parameterType = method.getParameterTypes()[0];
                         // 根据类名生成依赖的 Bean 的名称
                         String dependencyName = Utils.lowerCaseFirstLetter(parameterType.getSimpleName());
+                        // 检查是否循环依赖
+                        if (creatingBeans.contains(dependencyName)) {
+                            //尝试从二级缓存获取
+                            Object earlyDependency = earlySingletonObjects.get(dependencyName);
+                            if (earlyDependency != null) {
+                                method.invoke(bean, earlyDependency);
+                                continue;
+                            } else{
+                                // 如果二级缓存中没有，说明循环依赖存在问题，抛出异常
+                                throw new RuntimeException("Circular dependency cannot be resolved for " + name);
+                            }
+                        }
                         // 获取依赖的 Bean 的实例
                         Object dependency = getBean(dependencyName);
                         // 调用 Setter 方法，注入依赖
