@@ -1,4 +1,4 @@
-package main.java.beans;
+package main.java.beans.users;
 
 public interface MyService {
     void doSomething();

@@ -1,12 +1,23 @@
 package main.java;
 
+import main.java.aop.interfaces.Advice;
+import main.java.aop.proxy.ProxyFactory;
 import main.java.beans.A;
 import main.java.beans.B;
 import main.java.beans.Dependency;
 import main.java.beans.Service;
+import main.java.beans.advices.LoggerAdvice;
+import main.java.beans.advices.TransactionAdvice;
+import main.java.beans.users.Register;
+import main.java.beans.users.UserRegister;
 import main.java.core.SimpleIOC;
 import main.java.enums.InjectionType;
 import main.java.enums.ScopeType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -53,6 +64,15 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Exception: " + e.getMessage());
         }
+
+        UserRegister userRegister = new UserRegister();
+        Advice loggerAdvice = new LoggerAdvice();
+        Advice transactionAdvice = new TransactionAdvice();
+        List<Advice> advices = new ArrayList<>();
+        advices.add(loggerAdvice);
+        advices.add(transactionAdvice);
+        Register proxy = (Register) ProxyFactory.getProxy(userRegister, advices);
+        String result = proxy.registerUser("ethan", "password");
 
         // Destroy singleton Beans
         ioc.destroySingletons();

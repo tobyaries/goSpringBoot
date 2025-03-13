@@ -1,12 +1,13 @@
-package main.java.aop.impl;
+package main.java.beans.advices;
 
 import main.java.aop.interfaces.Advice;
 import main.java.aop.interfaces.AdviceChain;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
- * LoggerAdvice, a simple advice that logs method invocations.
+ * LoggerAdvice, simple advice that logs method invocations.
  */
 public class LoggerAdvice implements Advice {
 
@@ -20,7 +21,8 @@ public class LoggerAdvice implements Advice {
      */
     @Override
     public void before(Object target, Method method, Object[] args) {
-        System.out.println("Before " + method.getName());
+        System.out.println("Logger: Before " + method.getName() +
+                ", arguments: " + Arrays.toString(args));
     }
 
     /**
@@ -34,7 +36,8 @@ public class LoggerAdvice implements Advice {
      */
     @Override
     public void after(Object target, Method method, Object[] args, Object result) {
-        System.out.println("After " + method.getName() + ", result: " + result);
+        System.out.println("Logger: After " + method.getName() +
+                ", result: " + result);
     }
 
     /**
@@ -48,7 +51,8 @@ public class LoggerAdvice implements Advice {
      */
     @Override
     public void afterThrowing(Object target, Method method, Object[] args, Throwable throwable) {
-        System.out.println("Exception in " + method.getName() + ": " + throwable.getMessage());
+        System.out.println("Logger: Exception in " + method.getName() +
+                ": " + throwable.getMessage());
     }
 
     /**
@@ -65,9 +69,9 @@ public class LoggerAdvice implements Advice {
      */
     @Override
     public Object around(Object target, Method method, Object[] args, AdviceChain adviceChain) throws Throwable {
-        System.out.println("Around before " + method.getName());
+        System.out.println("Logger: Start logger before " + method.getName());
         Object result = adviceChain.invokeNext(target, method, args);
-        System.out.println("Around after " + method.getName());
+        System.out.println("Logger: Finish logger after " + method.getName());
         return result;
     }
 }
