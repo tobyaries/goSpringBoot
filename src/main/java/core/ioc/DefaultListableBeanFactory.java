@@ -6,6 +6,7 @@ import core.utils.Utils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,13 +17,18 @@ import java.util.function.Supplier;
  */
 public class DefaultListableBeanFactory {
 
-    private Map<String, BeanDefinition> beanDefinitionMap;
-    private Map<String, Object> singletonObjects;
-    private Map<String, Object> earlySingletonObjects;
-    private Map<String, Supplier<?>> singletonFactories;
+    private Map<String, BeanDefinition> beanDefinitionMap = new HashMap<>();
+    private Map<String, Object> singletonObjects = new HashMap<>();
+    private Map<String, Object> earlySingletonObjects = new HashMap<>();
+    private Map<String, Supplier<?>> singletonFactories = new HashMap<>();
     private Set<String> creatingBeans = new HashSet<>();
-    private BeanProvider beanProvider;
+    private BeanProvider beanProvider = new BeanProvider(beanDefinitionMap, singletonObjects, earlySingletonObjects, singletonFactories, this);
 
+    /**
+     * Constructor, receives Bean definition map, singleton cache, and early singleton cache
+     */
+    public DefaultListableBeanFactory() {
+    }
 
     /**
      * Constructor, receives Bean definition map, singleton cache, and early singleton cache
@@ -52,7 +58,7 @@ public class DefaultListableBeanFactory {
      * @throws Exception If Bean instance creation fails
      */
     public Object createBean(String name, BeanDefinition beanDefinition) throws Exception {
-        // Check for circular dependency: if the current Bean is being created, throw an exception
+        // ... (您的 createBean 方法代码不变) ...
         if (creatingBeans.contains(name)) {
             // If it is constructor injection, throw an exception
             if (beanDefinition.getInjectionType() == InjectionType.CONSTRUCTOR) {
@@ -146,7 +152,13 @@ public class DefaultListableBeanFactory {
         }
     }
 
-    private Object getBean(String name) {
+    /**
+     * Get Bean instance by name
+     *
+     * @param name Bean name
+     * @return Bean instance
+     */
+    public Object getBean(String name) {
         return beanProvider.getBean(name);
     }
 
@@ -155,5 +167,15 @@ public class DefaultListableBeanFactory {
             Method initMethod = bean.getClass().getMethod(methodName);
             initMethod.invoke(bean);
         }
+    }
+
+    /**
+     * Register Bean definition
+     *
+     * @param beanName       Bean name
+     * @param beanDefinition Bean definition
+     */
+    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+        beanDefinitionMap.put(beanName, beanDefinition);
     }
 }

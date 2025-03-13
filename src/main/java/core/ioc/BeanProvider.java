@@ -41,6 +41,8 @@ public class BeanProvider {
             throw new IllegalArgumentException("No bean named " + name + " is registered");
         }
         ScopeType scope = beanDefinition.getScope();
+        // set default scope
+        scope = scope == null ? ScopeType.SINGLETON : scope;
         if (ScopeType.SINGLETON.equals(scope)) {
             // Singleton Bean
             // Try to get the fully created Bean instance from the first-level cache

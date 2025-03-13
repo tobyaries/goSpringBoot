@@ -1,0 +1,20 @@
+{
+  "beans": [
+    {
+      "id": "dataProcessor",
+      "class": "beans.cfgRd.impl.CsvDataProcessor",
+      "scope": "singleton",
+      "properties": {
+        "dataSource": {
+          "ref": "dataSource"
+        }
+      }
+    },
+    {
+      "id": "dataSource",
+      "class": "beans.cfgRd.impl.FileDataSource",
+      "scope": "prototype",
+      "properties": {}
+    }
+  ]
+}
