@@ -1,23 +1,18 @@
-package main.java;
-
-import main.java.aop.interfaces.Advice;
-import main.java.aop.proxy.ProxyFactory;
-import main.java.beans.A;
-import main.java.beans.B;
-import main.java.beans.Dependency;
-import main.java.beans.Service;
-import main.java.beans.advices.LoggerAdvice;
-import main.java.beans.advices.TransactionAdvice;
-import main.java.beans.users.Register;
-import main.java.beans.users.UserRegister;
-import main.java.core.SimpleIOC;
-import main.java.enums.InjectionType;
-import main.java.enums.ScopeType;
-
+import aop.interfaces.Advice;
+import aop.proxy.ProxyFactory;
+import beans.A;
+import beans.B;
+import beans.Dependency;
+import beans.Service;
+import beans.advices.LoggerAdvice;
+import beans.advices.TransactionAdvice;
+import beans.users.Register;
+import beans.users.UserRegister;
+import core.SimpleIOC;
+import enums.InjectionType;
+import enums.ScopeType;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Main {
     public static void main(String[] args) throws Exception {

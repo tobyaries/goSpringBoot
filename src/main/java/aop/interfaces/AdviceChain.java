@@ -1,4 +1,4 @@
-package main.java.aop.interfaces;
+package aop.interfaces;
 
 import java.lang.reflect.Method;
 

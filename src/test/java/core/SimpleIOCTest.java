@@ -1,12 +1,11 @@
-package test.java.core;
+package core;
 
-import main.java.beans.A;
-import main.java.beans.B;
-import main.java.beans.Dependency;
-import main.java.beans.Service;
-import main.java.core.SimpleIOC; // Replace OldSimpleIOC with SimpleIOC
-import main.java.enums.InjectionType;
-import main.java.enums.ScopeType;
+import beans.A;
+import beans.B;
+import beans.Dependency;
+import beans.Service;
+import enums.InjectionType;
+import enums.ScopeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

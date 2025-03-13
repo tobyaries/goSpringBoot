@@ -1,4 +1,4 @@
-package main.java.beans.users;
+package beans.users;
 
 public class MyServiceImpl implements MyService {
     public void doSomething() {

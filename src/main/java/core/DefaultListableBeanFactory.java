@@ -1,7 +1,8 @@
-package main.java.core;
+package core;
 
-import main.java.enums.InjectionType;
-import main.java.utils.Utils;
+import enums.InjectionType;
+import utils.Utils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

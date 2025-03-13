@@ -1,7 +1,7 @@
-package main.java.aop.proxy;
+package aop.proxy;
 
-import main.java.aop.handler.AdviceInvocationHandler;
-import main.java.aop.interfaces.Advice;
+import aop.handler.AdviceInvocationHandler;
+import aop.interfaces.Advice;
 
 import java.lang.reflect.Proxy;
 import java.util.List;

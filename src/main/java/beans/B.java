@@ -1,4 +1,4 @@
-package main.java.beans;
+package beans;
 
 public class B {
     private A a;

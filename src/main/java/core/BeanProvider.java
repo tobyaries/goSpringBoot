@@ -1,6 +1,7 @@
-package main.java.core;
+package core;
 
-import main.java.enums.ScopeType;
+import enums.ScopeType;
+
 import java.util.Map;
 import java.util.function.Supplier;
 

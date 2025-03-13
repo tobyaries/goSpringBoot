@@ -1,7 +1,8 @@
-package main.java.aop.impl;
+package aop.impl;
 
-import main.java.aop.interfaces.Advice;
-import main.java.aop.interfaces.AdviceChain;
+
+import aop.interfaces.Advice;
+import aop.interfaces.AdviceChain;
 
 import java.lang.reflect.Method;
 import java.util.List;

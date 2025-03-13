@@ -1,7 +1,7 @@
-package main.java.core;
+package core;
 
-import main.java.enums.InjectionType;
-import main.java.enums.ScopeType;
+import enums.InjectionType;
+import enums.ScopeType;
 
 /**
  * Bean definition class, used to store Bean metadata

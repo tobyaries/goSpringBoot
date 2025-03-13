@@ -1,7 +1,7 @@
-package main.java.beans.advices;
+package beans.advices;
 
-import main.java.aop.interfaces.Advice;
-import main.java.aop.interfaces.AdviceChain;
+import aop.interfaces.Advice;
+import aop.interfaces.AdviceChain;
 
 import java.lang.reflect.Method;
 

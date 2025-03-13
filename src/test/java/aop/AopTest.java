@@ -1,3 +1,5 @@
+package aop;
+
 /* This is a workflow graph
    can see it in Mermaid Live Editor: https://mermaid.live/
     graph TD
@@ -14,16 +16,15 @@
     C --> A;
 */
 
-package test.java.aop;
 
-import main.java.beans.advices.TransactionAdvice;
-import main.java.aop.interfaces.Advice;
-import main.java.beans.advices.LoggerAdvice;
-import main.java.aop.proxy.ProxyFactory;
-import main.java.beans.users.MyService;
-import main.java.beans.users.MyServiceImpl;
-import main.java.beans.users.Register;
-import main.java.beans.users.UserRegister;
+import aop.interfaces.Advice;
+import aop.proxy.ProxyFactory;
+import beans.advices.LoggerAdvice;
+import beans.advices.TransactionAdvice;
+import beans.users.MyService;
+import beans.users.MyServiceImpl;
+import beans.users.Register;
+import beans.users.UserRegister;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 /**
  * AopTest, a test class for AOP functionality.
