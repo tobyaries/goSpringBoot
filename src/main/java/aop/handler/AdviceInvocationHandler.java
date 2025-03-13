@@ -1,5 +1,6 @@
-package main.java.aop.impl;
+package main.java.aop.handler;
 
+import main.java.aop.impl.DefaultAdviceChain;
 import main.java.aop.interfaces.Advice;
 
 import java.lang.reflect.InvocationHandler;
