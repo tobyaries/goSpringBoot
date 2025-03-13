@@ -1,16 +1,15 @@
-import aop.interfaces.Advice;
-import aop.proxy.ProxyFactory;
-import beans.A;
-import beans.B;
-import beans.Dependency;
-import beans.Service;
-import beans.advices.LoggerAdvice;
-import beans.advices.TransactionAdvice;
-import beans.users.Register;
-import beans.users.UserRegister;
-import core.SimpleIOC;
-import enums.InjectionType;
-import enums.ScopeType;
+import core.aop.interfaces.Advice;
+import core.aop.proxy.ProxyFactory;
+import beans.aop.MyService;
+import beans.ioc.A;
+import beans.ioc.B;
+import beans.ioc.Dependency;
+import beans.ioc.Service;
+import beans.aop.Register;
+import beans.aop.UserRegister;
+import core.ioc.SimpleIOC;
+import core.enums.InjectionType;
+import core.enums.ScopeType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +60,8 @@ public class Main {
         }
 
         UserRegister userRegister = new UserRegister();
-        Advice loggerAdvice = new LoggerAdvice();
-        Advice transactionAdvice = new TransactionAdvice();
+        Advice loggerAdvice = new MyService.LoggerAdvice();
+        Advice transactionAdvice = new MyService.TransactionAdvice();
         List<Advice> advices = new ArrayList<>();
         advices.add(loggerAdvice);
         advices.add(transactionAdvice);

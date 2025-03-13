@@ -17,14 +17,12 @@ package aop;
 */
 
 
-import aop.interfaces.Advice;
-import aop.proxy.ProxyFactory;
-import beans.advices.LoggerAdvice;
-import beans.advices.TransactionAdvice;
-import beans.users.MyService;
-import beans.users.MyServiceImpl;
-import beans.users.Register;
-import beans.users.UserRegister;
+import core.aop.interfaces.Advice;
+import core.aop.proxy.ProxyFactory;
+import beans.aop.MyService;
+import beans.aop.MyServiceImpl;
+import beans.aop.Register;
+import beans.aop.UserRegister;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class AopTest {
         // Create a target object
         MyServiceImpl target = new MyServiceImpl();
         // Create an advice object
-        Advice advice = new LoggerAdvice();
+        Advice advice = new MyService.LoggerAdvice();
         // Create a list of advices
         List<Advice> advices = new ArrayList<>();
         advices.add(advice);
@@ -76,8 +74,8 @@ public class AopTest {
         UserRegister userRegister = new UserRegister();
 
         // Create two advice objects
-        Advice loggerAdvice = new LoggerAdvice();
-        Advice transactionAdvice = new TransactionAdvice();
+        Advice loggerAdvice = new MyService.LoggerAdvice();
+        Advice transactionAdvice = new MyService.TransactionAdvice();
 
         // Create a list of advices
         List<Advice> advices = new ArrayList<>();
