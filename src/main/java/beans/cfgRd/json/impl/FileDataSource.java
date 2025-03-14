@@ -1,6 +1,6 @@
-package beans.cfgRd.impl;
+package beans.cfgRd.json.impl;
 
-import beans.cfgRd.service.DataSource;
+import beans.cfgRd.json.interfaces.DataSource;
 
 public class FileDataSource implements DataSource {
     @Override

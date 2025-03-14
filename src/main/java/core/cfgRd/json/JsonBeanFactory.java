@@ -1,5 +1,6 @@
-package core.cfgRd;
+package core.cfgRd.json;
 
+import core.cfgRd.BeanDefinitionReader;
 import core.ioc.BeanDefinition;
 import core.ioc.DefaultListableBeanFactory;
 

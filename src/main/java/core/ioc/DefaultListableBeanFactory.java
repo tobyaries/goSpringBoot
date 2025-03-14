@@ -1,5 +1,6 @@
 package core.ioc;
 
+import core.cfgRd.annotation.AnnotationBeanDefinitionReader;
 import core.enums.InjectionType;
 import core.utils.Utils;
 
@@ -23,7 +24,7 @@ public class DefaultListableBeanFactory {
     private Map<String, Supplier<?>> singletonFactories = new HashMap<>();
     private Set<String> creatingBeans = new HashSet<>();
     private BeanProvider beanProvider = new BeanProvider(beanDefinitionMap, singletonObjects, earlySingletonObjects, singletonFactories, this);
-
+    private AnnotationBeanDefinitionReader annotationBeanDefinitionReader = new AnnotationBeanDefinitionReader();
     /**
      * Constructor, receives Bean definition map, singleton cache, and early singleton cache
      */
@@ -78,10 +79,10 @@ public class DefaultListableBeanFactory {
             // Select injection method based on injection type
             if (beanDefinition.getInjectionType() == InjectionType.CONSTRUCTOR) {
                 // Constructor injection
-                Constructor<?>[] constructors = beanDefinition.getClazz().getConstructors();
+                Constructor<?>[] constructors = beanDefinition.getBeanClass().getConstructors();
                 if (constructors.length == 0) {
                     // If there is no constructor, use the default constructor
-                    bean = beanDefinition.getClazz().getDeclaredConstructor().newInstance();
+                    bean = beanDefinition.getBeanClass().getDeclaredConstructor().newInstance();
                 } else {
                     // If there is a constructor, use the first constructor
                     Constructor<?> constructor = constructors[0];
@@ -102,7 +103,7 @@ public class DefaultListableBeanFactory {
                 }
             } else {
                 // Setter injection
-                bean = beanDefinition.getClazz().getDeclaredConstructor().newInstance();
+                bean = beanDefinition.getBeanClass().getDeclaredConstructor().newInstance();
             }
 
             /* ---  Bean has been created at this point ---*/
@@ -116,7 +117,7 @@ public class DefaultListableBeanFactory {
             // Even if constructor injection is used, setter injection will be performed. Because there may be optional parameters that need setter injection after constructor injection.
             if (beanDefinition.getInjectionType() == InjectionType.SETTER || beanDefinition.getInjectionType() == InjectionType.CONSTRUCTOR) {
                 // Get all methods of the Bean
-                Method[] methods = beanDefinition.getClazz().getMethods();
+                Method[] methods = beanDefinition.getBeanClass().getMethods();
                 // Iterate through the methods to find Setter methods
                 for (Method method : methods) {
                     if (method.getName().startsWith("set") && method.getParameterCount() == 1) {
@@ -143,6 +144,8 @@ public class DefaultListableBeanFactory {
                     }
                 }
             }
+            // call the annotation inject
+            annotationBeanDefinitionReader.injectDependencies(bean, beanDefinition.getBeanClass(), this);
             // Call the initialization method
             invokeInitMethod(bean, beanDefinition.getInitMethodName());
             return bean;
@@ -191,5 +194,9 @@ public class DefaultListableBeanFactory {
      */
     public BeanDefinition getBeanDefinition(String name) {
         return beanDefinitionMap.get(name);
+    }
+
+    public Map<String, BeanDefinition> getBeanDefinitionMap() {
+        return beanDefinitionMap;
     }
 }

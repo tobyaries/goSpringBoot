@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class BeanDefinition {
     private String id; // Bean ID
-    private Class<?> clazz; // Class object of the Bean
+    private Class<?> beanClass; // Class object of the Bean
     private InjectionType injectionType; // Injection type of the Bean
     private ScopeType scope; // Scope of the Bean
     private String initMethodName; // Initialization method name of the Bean
@@ -20,8 +20,8 @@ public class BeanDefinition {
     public BeanDefinition() {
     }
 
-    public BeanDefinition(Class<?> clazz, InjectionType injectionType, ScopeType scope, String initMethodName, String destroyMethodName) {
-        this.clazz = clazz;
+    public BeanDefinition(Class<?> beanClass, InjectionType injectionType, ScopeType scope, String initMethodName, String destroyMethodName) {
+        this.beanClass = beanClass;
         this.injectionType = injectionType;
         this.scope = scope;
         this.initMethodName = initMethodName;
@@ -36,12 +36,12 @@ public class BeanDefinition {
         this.id = id;
     }
 
-    public Class<?> getClazz() {
-        return clazz;
+    public Class<?> getBeanClass() {
+        return beanClass;
     }
 
-    public void setBeanClass(Class<?> clazz) {
-        this.clazz = clazz;
+    public void setBeanClass(Class<?> beanClass) {
+        this.beanClass = beanClass;
     }
 
     public InjectionType getInjectionType() {

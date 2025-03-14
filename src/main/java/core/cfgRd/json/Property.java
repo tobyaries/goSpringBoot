@@ -1,4 +1,4 @@
-package core.cfgRd;
+package core.cfgRd.json;
 
 public class Property {
     private String ref;

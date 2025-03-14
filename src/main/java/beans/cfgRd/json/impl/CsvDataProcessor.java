@@ -1,18 +1,11 @@
-package beans.cfgRd.impl;
+package beans.cfgRd.json.impl;
 
-import beans.cfgRd.service.DataProcessor;
-import beans.cfgRd.service.DataSource;
+import beans.cfgRd.json.interfaces.DataProcessor;
+import beans.cfgRd.json.interfaces.DataSource;
 
 public class CsvDataProcessor implements DataProcessor {
 
     private DataSource dataSource;
-
-    // 静态初始化日志
-    static {
-        System.out.println("CsvDataProcessor static initialization started.");
-        // 静态初始化代码
-        System.out.println("CsvDataProcessor static initialization finished.");
-    }
 
     public DataSource getDataSource() {
         return dataSource;

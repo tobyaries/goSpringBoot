@@ -1,9 +1,10 @@
-package core.cfgRd;
+package core.cfgRd.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import core.cfgRd.BeanDefinitionReader;
 import core.enums.ScopeType;
 import core.ioc.BeanDefinition;
 

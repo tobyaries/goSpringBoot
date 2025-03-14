@@ -1,4 +1,4 @@
-package beans.cfgRd.service;
+package beans.cfgRd.json.interfaces;
 
 public interface DataSource {
     void readData();
