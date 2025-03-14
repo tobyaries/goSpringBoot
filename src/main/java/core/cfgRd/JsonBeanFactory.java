@@ -1,5 +1,6 @@
 package core.cfgRd;
 
+import core.ioc.BeanDefinition;
 import core.ioc.DefaultListableBeanFactory;
 
 import java.util.Map;
@@ -21,8 +22,8 @@ public class JsonBeanFactory {
     public JsonBeanFactory(String configFilePath, DefaultListableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
         this.reader = new JsonBeanDefinitionReader();
-        Map<String, core.ioc.BeanDefinition> beanDefinitions = reader.loadBeanDefinitions(configFilePath);
-        beanDefinitions.forEach((id, definition) -> beanFactory.registerBeanDefinition(id, definition));
+        Map<String, BeanDefinition> beanDefinitions = reader.loadBeanDefinitions(configFilePath);
+        beanDefinitions.forEach(beanFactory::registerBeanDefinition);
     }
 
     /**

@@ -172,10 +172,24 @@ public class DefaultListableBeanFactory {
     /**
      * Register Bean definition
      *
-     * @param beanName       Bean name
+     * @param id       Bean name
      * @param beanDefinition Bean definition
      */
-    public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
-        beanDefinitionMap.put(beanName, beanDefinition);
+    public void registerBeanDefinition(String id, BeanDefinition beanDefinition) {
+        // Duplicate registration
+        if (beanDefinitionMap.containsKey(id)) {
+            throw new RuntimeException("Bean definition with id '" + id + "' already exists.");
+        }
+        beanDefinitionMap.put(id, beanDefinition);
+    }
+
+    /**
+     * Get Bean definition by name
+     *
+     * @param name Bean name
+     * @return Bean definition
+     */
+    public BeanDefinition getBeanDefinition(String name) {
+        return beanDefinitionMap.get(name);
     }
 }
